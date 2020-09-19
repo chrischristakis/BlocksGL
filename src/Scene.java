@@ -124,7 +124,7 @@ public class Scene
 	
 	private void handleKeys()
 	{
-		moveBlock = true;
+		moveBlock = true; //test
 		//Key input / TODO: Make a cooldown so they can do one move per key press, also handle horizontal collision. 
 		if(KeyInput.isPressed(GLFW_KEY_A)) //LEFT
 		{
