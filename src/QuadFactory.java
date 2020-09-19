@@ -75,5 +75,10 @@ public class QuadFactory
 	{
 		color.x = r/255.0f; color.y = g/255.0f; color.z = b/255.0f;
 	}
+	
+	public void setColor(Vector3f vec)
+	{
+		color = vec;
+	}
 
 }
