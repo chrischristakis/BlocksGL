@@ -46,7 +46,6 @@ public class Scene
 		
 		grid = new int[20][10];
 		grid[19][0] = 1;
-		grid[19][1] = 1;
 		grid[0][9] = 1;
 	}
 	
@@ -81,42 +80,38 @@ public class Scene
 			
 		if(glfwGetTime() - timer >= 0.2) //game tick
 		{
-			moveBlock = true; //assume the block can move initially. Innocent until proven guilty right
-			
-			int firstBlockY = 0; //This variable gives the index of the first row with a block in a shape.
+			// ----- Check if block has landed ontop of something -----
+			moveBlock = true;
 			outerloop:
-			for(int shapeY = block.shape.length-1; shapeY >= 0; shapeY--)
-				for(int shapeX = 0; shapeX < block.shape[shapeY].length; shapeX++)
-					if(block.shape[shapeY][shapeX] != 0)
+			for(int y = 0; y < block.shape.length; y++)
+				for(int x = 0; x < block.shape[y].length; x++)
+					if(block.shape[y][x] != 0) //We only care about the part of the shape that is composed of solid blocks, not 0's
 					{
-						firstBlockY = shapeY;
-						break outerloop;
+						if(block.y+y+1 >= gridRows) //block has landed at the bottom
+						{
+							moveBlock = false;
+							break outerloop;
+						}
+						if(grid[block.y+y+1][block.x+x] != 0) //Block had landed on another block
+						{
+							moveBlock = false;
+							break outerloop;
+						}
 					}
 			
-			if(block.y+firstBlockY == gridRows-1) //If block block reaches the bottom
-			{
-				moveBlock = false;
-			}
-			else //The block has not reached the bottom.
-			{
-				for(int shapeY = 0; shapeY < firstBlockY+1; shapeY++)
-					for(int shapeX = 0; shapeX < block.shape[shapeY].length; shapeX++)
-						if(grid[block.y+shapeY+1][block.x+shapeX] != 0 && block.shape[shapeY][shapeX] != 0)
-							moveBlock = false;
-			}
-			
-			if(moveBlock)
+			if(moveBlock) //Block has not landed
 				block.y++;
-			else //if the block cannot move, then it must be placed in position.
+			else //if Block has landed
 			{
-				//Loop through the shape and put it into the grid.
+				//Duplicate shape onto the grid.
 				for(int y = 0; y < block.shape.length; y++)
 					for(int x = 0; x < block.shape[y].length; x++)
-						if(block.shape[y][x] != 0)
-							grid[block.y+y][block.x+x] = 1;
-				block.x = 0;
-				block.y = 0;
+						if(block.shape[y][x] != 0) //Incase some 0's that are part of the shape are clipping out of the grid.
+							grid[y+block.y][x+block.x] = block.shape[y][x];
+				
+				block.x = 0; block.y = 0; //Reset position of shape to the top.
 			}
+			// ----------------------------------------------
 			
 			timer = glfwGetTime();
 		}
@@ -124,52 +119,71 @@ public class Scene
 	
 	private void handleKeys()
 	{
-		moveBlock = true; //test
-		//Key input / TODO: Make a cooldown so they can do one move per key press, also handle horizontal collision. 
-		if(KeyInput.isPressed(GLFW_KEY_A)) //LEFT
+		//RIGHT
+		moveBlock = true;
+		if(KeyInput.isPressed(GLFW_KEY_A))
 		{
 			if(canLeft)
 			{
+				canLeft = false; //So input is handled one keystroke at a time.
+			
+				//Make sure no blocks in the shape are exiting the grid.
+				outerloop:
 				for(int y = 0; y < block.shape.length; y++)
 					for(int x = 0; x < block.shape[y].length; x++)
-						if(block.shape[y][x] != 0 && grid[block.y+y][Math.max(0, block.x+x - 1)] != 0) //If the current shape element is a valid block, and space to left of current block isnt 0, dont move.
-							moveBlock = false;
-					
+						if(block.shape[y][x] != 0)
+						{
+							if(block.x+x-1 < 0)
+							{
+								moveBlock = false;
+								break outerloop;
+							}
+							if(grid[block.y+y][block.x+x-1] != 0)
+							{
+								moveBlock = false;
+								break outerloop;
+							}
+						}
+				
 				if(moveBlock)
-					block.x=Math.max(0, (block.x)-1);
-				canLeft = false;
+					block.x--;
 			}
 		}
 		else
 			canLeft = true;
 		
+		//RIGHT
 		moveBlock = true;
-		if(KeyInput.isPressed(GLFW_KEY_D)) //RIGHT
+		if(KeyInput.isPressed(GLFW_KEY_D))
 		{
 			if(canRight)
 			{
+				canRight = false; //So input is handled one keystroke at a time.
+			
+				//Make sure no blocks in the shape are exiting the grid.
+				outerloop:
 				for(int y = 0; y < block.shape.length; y++)
 					for(int x = 0; x < block.shape[y].length; x++)
-						if(block.shape[y][x] != 0 && grid[block.y+y][Math.min(gridCols-block.shape[0].length, block.x+x + 1)] != 0)
-							moveBlock = false;
+						if(block.shape[y][x] != 0)
+						{
+							if(block.x+x+1 >= gridCols)
+							{
+								moveBlock = false;
+								break outerloop;
+							}
+							if(grid[block.y+y][block.x+x+1] != 0)
+							{
+								moveBlock = false;
+								break outerloop;
+							}
+						}
+				
 				if(moveBlock)
-					block.x=Math.min(gridCols-block.shape[0].length, block.x+1);
-				canRight = false;
+					block.x++;
 			}
 		}
 		else
 			canRight = true;
-		
-		if(KeyInput.isPressed(GLFW_KEY_W)) //ROTATE
-		{
-			if(canRotate)
-			{
-				block.rotate();
-				canRotate = false;
-			}
-		}
-		else
-			canRotate = true;
 	}
 	
 	public void initBackground(int x, int y, int width, int height) //The playground area
@@ -210,7 +224,7 @@ public class Scene
 
 		public TShape(int x, int y) {
 			super(x, y);
-			shape = rot0;
+			shape = rot1;
 		}
 
 		@Override
