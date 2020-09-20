@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.joml.Matrix4f;
@@ -70,7 +71,7 @@ public class Scene
 	
 	public void render()
 	{
-		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		
 		//Play area
 		bgShader.bind();
@@ -138,8 +139,36 @@ public class Scene
 						if(block.shape[y][x] != 0) //Incase some 0's that are part of the shape are clipping out of the grid.
 							grid[y+block.y][x+block.x] = block.shape[y][x];
 				
-				block.x = 0; block.y = 0; //Reset position of shape to the top.
+			
+				boolean emptySpace;
+				ArrayList<Integer> rowsRemoved = new ArrayList<Integer>();
+				//Check if a row of blocks may be removed.
+				for(int y = 0; y < gridRows; y++)
+				{
+					emptySpace = false;
+					for(int x = 0; x < gridCols; x++)
+						if(grid[y][x] == 0) //If any space in a row is empty
+							emptySpace = true;
+					
+					if(!emptySpace) //No empty spaces in a row? Remove it!
+					{
+						rowsRemoved.add(y);
+						for(int x = 0; x < gridCols; x++)
+							grid[y][x] = 0;
+					}
+				}
 				
+				//Shift all blocks to accont for the now empty rows. Tetris gravity!
+				for(int i = 0; i < rowsRemoved.size(); i++)
+				{
+					int currentRow = rowsRemoved.get(i);
+					System.out.println(currentRow);
+					for(int y = currentRow; y >= 0; y--)
+						for(int x = 0; x < gridCols; x++)
+							grid[y][x] = grid[Math.max(0,y-1)][x];
+				}		
+				
+				block.x = 0; block.y = 0; //Reset position of shape to the top.
 				//Select new block
 				switch(random.nextInt(7))
 				{
@@ -164,9 +193,9 @@ public class Scene
 	{
 		//SPEED
 		if(KeyInput.isPressed(GLFW_KEY_S))
-			gameTickInterval = 0.1f;
+			gameTickInterval = 0.08f;
 		else
-			gameTickInterval = 0.5f;
+			gameTickInterval = 0.6f;
 		
 		//RIGHT
 		moveBlock = true;
