@@ -1,3 +1,4 @@
+package chrischristakis;
 import static org.lwjgl.glfw.GLFW.*;
 
 import org.lwjgl.glfw.GLFWVidMode;
@@ -25,7 +26,7 @@ public class Main implements Runnable
 	public void init()
 	{
 		glfwInit();
-		
+		glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
 		window = glfwCreateWindow(WIDTH, HEIGHT, "PongGL", 0, 0); 
 		GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 		glfwSetWindowPos(window, (vidmode.width()-WIDTH)/2, (vidmode.height()-HEIGHT)/2);
