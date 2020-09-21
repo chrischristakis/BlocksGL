@@ -38,7 +38,7 @@ public class Main implements Runnable
 		glfwSwapInterval(0);
 		glfwSetKeyCallback(window, new KeyInput());
 		
-		scene = new Scene();
+		scene = new Scene(window);
 	}
 	
 	public void run()
@@ -76,7 +76,6 @@ public class Main implements Runnable
 			
 			if(glfwGetTime() - timer >= 1)
 			{
-				glfwSetWindowTitle(window, "UPS: " + updates + " | FPS: " + frames);
 				updates = 0;
 				frames = 0;
 				timer = glfwGetTime();

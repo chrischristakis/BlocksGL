@@ -42,6 +42,7 @@ public class Scene
 	
 	double timer; //Keeps track of when to update the game
 	private float gameTickInterval = 0.5f; //How fast each block falls
+	private float dropRate = 0.6f; //How fast each block falls
 	
 	private float outline;
 	private boolean quadMode = false;
@@ -57,11 +58,14 @@ public class Scene
 	public static final Vector3f JColor = new Vector3f( 77/255.0f, 97/255.0f, 255/255.0f);
 	public static final Vector3f SColor = new Vector3f( 59/255.0f, 255/255.0f, 98/255.0f);
 	public static final Vector3f ZColor = new Vector3f( 255/255.0f, 54/255.0f, 54/255.0f);
+	
+	private long window;
+	private int score;
 	//--------------------------
 	
-	public Scene()
+	public Scene(long window)
 	{	
-		
+		this.window = window;
 		//Shader init
 		blockShader = new ShaderProgram("block.vert", "block.frag");
 		blockShader.bind();
@@ -220,6 +224,10 @@ public class Scene
 					}
 				}
 				
+				score+=rowsRemoved.size()*10;
+				glfwSetWindowTitle(window, "Score: " + score);
+				dropRate = Math.max(0.2f,-score/1000.0f + 0.6f);
+				
 				//Shift all blocks to accont for the now empty rows. Tetris gravity!
 				for(int i = 0; i < rowsRemoved.size(); i++)
 				{
@@ -257,7 +265,7 @@ public class Scene
 		if(KeyInput.isPressed(GLFW_KEY_S))
 			gameTickInterval = 0.08f;
 		else
-			gameTickInterval = 0.6f;
+			gameTickInterval = dropRate;
 		
 		//RIGHT
 		moveBlock = true;
