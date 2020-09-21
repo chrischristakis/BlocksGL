@@ -2,6 +2,18 @@
 A Tetris clone using OpenGL'
 <div><img src="demoImg.PNG" width="500"></img></div>
 <hr>
+<h3> Features </h3>
+<ul>
+  <li>Fully functional classic Tetris</li>
+  <li>Rotations implemented adhering to the Symmetric Rotation System</li>
+  <li>Wall kicks</li>
+  <li>T-Spin</li>
+  <li>Increased falling shape velocity as score increases</li>
+  <li>A visual block queue</li>
+  <li>(TO ADD) An in-game score representation</li>
+  <li>(TO ADD) Menus with adjustable parameters for in-game features</li>
+</ul>
+<hr>
 <h3>Notes:</h3>
 <ul>
   <li>There is no text in this game yet, so the score is displayed at the top of the screen where the title bar should be. I will wait until I make my OpenGL text renderer library   before adding text such as score and a proper game over instead of the program shutting down when you lose.</li>
