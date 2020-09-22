@@ -4,6 +4,7 @@ A Tetris clone using OpenGL'
 <hr>
 <h3> Features </h3>
 <ul>
+  <li>A Batch rendering system</li>
   <li>Fully functional classic Tetris</li>
   <li>Rotations implemented adhering to the Symmetric Rotation System</li>
   <li>Wall kicks</li>
