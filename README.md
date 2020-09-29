@@ -2,6 +2,10 @@
 A Tetris clone using OpenGL'
 <div><img src="demoImg.PNG" width="500"></img></div>
 <hr>
+<h3>Usage:</h3> 
+<p>Navigate to the releases section and download blocksgl.zip. Unzip it, then run the jar. If the jar doesn't run by clicking on it, run it in console
+  by navigating to the same directory the jar is in and typing "java -jar blocksgl.jar"</p>
+<hr>
 <h3> Features </h3>
 <ul>
   <li>A Batch rendering system</li>
