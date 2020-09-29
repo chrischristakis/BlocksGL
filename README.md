@@ -4,7 +4,8 @@ A Tetris clone using OpenGL'
 <hr>
 <h3>Usage:</h3> 
 <p>Navigate to the releases section and download blocksgl.zip. Unzip it, then run the jar. If the jar doesn't run by clicking on it, run it in console
-  by navigating to the same directory the jar is in and typing "java -jar blocksgl.jar"</p>
+  by navigating to the same directory the jar is in and typing "java -jar blocksgl.jar". <b>Make sure you unzip the file first before running the jar,
+  otherwise the resources will not load.</b></p>
 <hr>
 <h3> Features </h3>
 <ul>
