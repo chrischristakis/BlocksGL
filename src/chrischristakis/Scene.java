@@ -1,13 +1,8 @@
 package chrischristakis;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
-import static org.lwjgl.opengl.GL30.*;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Random;
 
 import org.joml.Matrix4f;
@@ -226,7 +221,7 @@ public class Scene
 				
 				score+=rowsRemoved.size()*10;
 				glfwSetWindowTitle(window, "Score: " + score);
-				dropRate = Math.max(0.2f,-score/1000.0f + 0.6f);
+				dropRate = Math.max(0.23f,-score/1000.0f + 0.6f);
 				
 				//Shift all blocks to accont for the now empty rows. Tetris gravity!
 				for(int i = 0; i < rowsRemoved.size(); i++)
